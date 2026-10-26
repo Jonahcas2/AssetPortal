@@ -1,0 +1,17 @@
+﻿@page "{id:int}"
+@model AssetPortal.Pages.Assets.CheckoutModel
+
+<h1>Checkout Equipment</h1>
+<p><strong>@Model.Asset.Name</strong> (@Model.Asset.AssetTag)</p>
+
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="EmployeeName" class="form-label"></label>
+        <input asp-for="EmployeeName" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Confirm Checkout</button>
+    <button type="button" class="btn btn-secondary">Cancel</button>
+</form>

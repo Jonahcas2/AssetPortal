@@ -1,0 +1,33 @@
+﻿@page
+@model AssetPortal.Pages.Checkouts.IndexModel
+
+<h1>Who Has What</h1>
+
+@if (!Model.Open.Any())
+{
+    <p>Nothing is checked out right now.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Item</th>
+                <th>Checked out</th>
+                <th>Days out</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model.Open)
+            {
+                <tr>
+                    <td>@c.EmployeeName</td>
+                    <td>@c.Asset.Name (@c.Asset.AssetTag)</td>
+                    <td>@c.CheckedOutAt.ToString("MMM d, yyyy h:mm tt")</td>
+                    <td>@((DateTime.Now - c.CheckedOutAt).Days)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

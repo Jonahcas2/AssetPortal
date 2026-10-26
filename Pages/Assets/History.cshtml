@@ -1,0 +1,40 @@
+﻿@page "{id:int}"
+@model AssetPortal.Pages.Assets.HistoryModel
+
+<h1>History: @Model.Asset.Name</h1>
+<p>@Model.Asset.AssetTag &middot; @Model.Asset.Category</p>
+
+@if (!Model.Asset.Checkouts.Any())
+{
+    <p>This item has never been checked out.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr><th>Employees</th><th>Checked out</th><th>Returned</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model.Asset.Checkouts.OrderByDescending(c => c.CheckedOutAt))
+            {
+                <tr>
+                    <td>@c.EmployeeName</td>
+                    <td>@c.CheckedOutAt.ToString("MMM d, yyyy h:mm tt")</td>
+                    <td>
+                        @if (c.ReturnedAt == null)
+                        {
+                            <span class="badge bg-warning text-dark">Still out</span>
+                        }
+                        else
+                        {
+                            @c.ReturnedAt.Value.ToString("MMM d, yyyy h:mm tt")
+                        }
+                    </td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-page="Index" class="btn btn-secondary">Back to list</a>

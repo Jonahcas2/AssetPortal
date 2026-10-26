@@ -1,0 +1,31 @@
+﻿@page
+@model AssetPortal.Pages.Assets.CreateModel
+
+<h1>Add Equipment</h1>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Asset.Name" class="form-label"></label>
+        <input asp-for="Asset.Name" class="form-control" />
+        <span asp-validation-for="Asset.AssetTag" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Asset.AssetTag" class="form-label"></label>
+        <input asp-for="Asset.AssetTag" class="form-control" />
+        <span asp-validation-for="Asset.AssetTag" class="text-danger"></span>
+    </div>
+        <div class="mb-3">
+        <label asp-for="Asset.Category" class="form-label"></label>
+        <input asp-for="Asset.Category" class="form-control" />
+        <span asp-validation-for="Asset.Category" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
