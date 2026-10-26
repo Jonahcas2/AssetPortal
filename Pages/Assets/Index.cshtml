@@ -3,27 +3,40 @@
 
 <h1>Equipment</h1>
 
+<a asp-page="Create" class="btn btn-primary mb-3">Add Equipment</a>
+
 <table class="table">
     <thead>
-        <tr><th>Tag</th><th>Name</th><th>Category</th><th>Status</th></tr>
+        <tr>
+            <th>Tag</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
     </thead>
     <tbody>
-        <a asp-page="Create" class="btn btn-primary mb-3">Add Equipment</a>
         @foreach (var a in Model.Assets)
         {
             <tr>
-                <a asp-page="Edit" asp-route-id="@a.Id">Edit</a>
-                <a asp-page="History" asp-route-id="@a.Id">History</a>
-                @if (a.IsAvailable)
-                {
-                    <a asp-page="Checkout" asp-route-id="@a.Id" class="btn btn-sm btn-success">Checkout</a>
-                }
-                else
-                {
-                    <form method="post" asp-page-handler="Return" asp-route-id="@a.Id" class="d-inline">
-                        <button type="submit" class="btn btn-sm btn-warning">Return</button>
-                    </form>
-                }
+                <td>@a.AssetTag</td>
+                <td>@a.Name</td>
+                <td>@a.Category</td>
+                <td>@(a.IsAvailable ? "Available" : "Checked out")</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@a.Id">Edit</a>
+                    <a asp-page="History" asp-route-id="@a.Id">History</a>
+                    @if (a.IsAvailable)
+                    {
+                        <a asp-page="Checkout" asp-route-id="@a.Id" class="btn btn-sm btn-success">Check out</a>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Return" asp-route-id="@a.Id" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-warning">Return</button>
+                        </form>
+                    }
+                </td>
             </tr>
         }
     </tbody>
