@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.AspNetCore.Identity.UI.UIFrameworkAttribute("Bootstrap5")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("AssetPortal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+14b8281dd15649d9585d219882773cf0eef376dc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f382b6aa681a87661bd18a30e072379a521572a")]
 [assembly: System.Reflection.AssemblyProductAttribute("AssetPortal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AssetPortal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
