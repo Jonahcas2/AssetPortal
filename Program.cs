@@ -51,4 +51,29 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+    if(!await roleManager.RoleExistsAsync("Admin"))
+        await roleManager.CreateAsync(new IdentityRole("Admin"));
+    
+    var adminEmail = app.Configuration["AdminEmail"];
+    var adminPassword = app.Configuration["AdminPassword"];
+
+    if(!string.IsNullOrEmpty(adminEmail) && !string.IsNullOrEmpty(adminPassword))
+    {
+        var admin = await userManager.FindByEmailAsync(adminEmail);
+        if (admin == null)
+        {
+            admin = new IdentityUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
+            var result = await userManager.CreateAsync(admin, adminPassword);
+            if (result.Succeeded)
+                await userManager.AddToRoleAsync(admin, "Admin");
+        }
+    }
+}
+;
+
 app.Run();
