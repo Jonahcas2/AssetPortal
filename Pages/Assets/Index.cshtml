@@ -1,9 +1,18 @@
 ﻿@page
+@using System.Security.Claims
 @model AssetPortal.Pages.Assets.IndexModel
+
+@{
+    var isAdmin = User.IsInRole("Admin");
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
 
 <h1>Equipment</h1>
 
-<a asp-page="Create" class="btn btn-primary mb-3">Add Equipment</a>
+@if (isAdmin)
+{
+    <a asp-page="Create" class="btn btn-primary mb-3">Add Equipment</a>
+}
 
 <table class="table">
     <thead>
@@ -18,14 +27,22 @@
     <tbody>
         @foreach (var a in Model.Assets)
         {
+            var open = a.Checkouts.FirstOrDefault();
+            var isMine = open != null && open.CheckedOutByUserId == userId;
+            var canReturn = isMine || isAdmin;
+
             <tr>
                 <td>@a.AssetTag</td>
                 <td>@a.Name</td>
                 <td>@a.Category</td>
                 <td>@(a.IsAvailable ? "Available" : "Checked out")</td>
                 <td>
-                    <a asp-page="Edit" asp-route-id="@a.Id">Edit</a>
-                    <a asp-page="History" asp-route-id="@a.Id">History</a>
+                    @if (isAdmin)
+                    {
+                        <a asp-page="Edit" asp-route-id="@a.Id">Edit</a>
+                        <a asp-page="History" asp-route-id="@a.Id">History</a>
+                    }
+
                     @if (a.IsAvailable)
                     {
                         <a asp-page="Checkout" asp-route-id="@a.Id" class="btn btn-sm btn-success">Check out</a>
