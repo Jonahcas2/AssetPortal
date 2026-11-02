@@ -5,7 +5,17 @@ using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/Assets");
+    options.Conventions.AuthorizePage("/Assets/Create", "AdminOnly");
+    options.Conventions.AuthorizePage("/Assets/Edit", "AdminOnly");
+    options.Conventions.AuthorizePage("/Assets/History", "AdminOnly");
+    options.Conventions.AuthorizeFolder("/Checkouts", "AdminOnly");
+});
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
 
 builder.Services.AddDbContext<AssetContext>(options =>
     options.UseSqlite("Data Source=assets.db"));

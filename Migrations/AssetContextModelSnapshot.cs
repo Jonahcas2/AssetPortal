@@ -59,6 +59,9 @@ namespace AssetPortal.Migrations
                     b.Property<DateTime>("CheckedOutAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("CheckedOutByUserId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("EmployeeName")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -212,9 +215,11 @@ namespace AssetPortal.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
@@ -252,9 +257,11 @@ namespace AssetPortal.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")

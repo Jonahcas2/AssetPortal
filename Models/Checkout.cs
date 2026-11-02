@@ -8,5 +8,6 @@ public class Checkout
     public string EmployeeName { get; set; } = null!;
     public DateTime CheckedOutAt { get; set; } = DateTime.Now;
     public DateTime? ReturnedAt { get; set; }
+    public string? CheckedOutByUserId { get; set; }
 
 }
