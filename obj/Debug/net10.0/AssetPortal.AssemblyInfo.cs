@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AssetPortal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3ea63b73637fc3306154aa038bd3a513bdf87ef3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0332f2756e5e170020942c65f7bdd238c4ab0c57")]
 [assembly: System.Reflection.AssemblyProductAttribute("AssetPortal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AssetPortal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
