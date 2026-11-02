@@ -1,65 +1,59 @@
-using System.ComponentModel.DataAnnotations;
-using AssetPortal.Models;
+using System.Security.Claims;
 using AssetPortal.Data;
+using AssetPortal.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace AssetPortal.Pages.Assets
+namespace AssetPortal.Pages.Assets;
+
+public class CheckoutModel : PageModel
 {
-    public class CheckoutModel : PageModel
+    private readonly AssetContext _db;
+    public CheckoutModel(AssetContext db) => _db = db;
+
+    public Asset Asset { get; set; } = null!;
+
+    public async Task<IActionResult> OnGetAsync(int id)
     {
-        private readonly AssetContext _db;
-        public CheckoutModel(AssetContext db) => _db = db;
+        var asset = await _db.Assets.FindAsync(id);
+        if (asset == null) return NotFound();
+        if (!asset.IsAvailable) return RedirectToPage("Index");
 
-        public Asset Asset { get; set; } = null!;
+        Asset = asset;
+        return Page();
+    }
 
-        [BindProperty, Required, StringLength(100)]
-        [Display(Name = "Your Name")]
-        public string EmployeeName { get; set; } = "";
+    public async Task<IActionResult> OnPostAsync(int id)
+    {
+        var asset = await _db.Assets.FindAsync(id);
+        if (asset == null) return NotFound();
+        Asset = asset;
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        if (!asset.IsAvailable)
         {
-            var asset = await _db.Assets.FindAsync(id);
-            if (asset == null) return NotFound();
-            if (!asset.IsAvailable) return RedirectToPage("Index");
-
-            Asset = asset;
+            ModelState.AddModelError("", "Sorry, this item was just checked out by someone else.");
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int id)
+        asset.IsAvailable = false;
+        _db.Checkouts.Add(new Checkout
         {
-            var asset = await _db.Assets.FindAsync(id);
-            if (asset == null) return NotFound();
-            Asset = asset;
+            AssetId = asset.Id,
+            EmployeeName = User.Identity?.Name ?? "Unknown",
+            CheckedOutByUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+        });
 
-            if (!ModelState.IsValid) return Page();
-
-            if (!asset.IsAvailable)
-            {
-                ModelState.AddModelError(string.Empty, "Sorry, this asset is no longer available.");
-                return Page();
-            }
-
-            asset.IsAvailable = false;
-            _db.Checkouts.Add(new Checkout 
-            { 
-                AssetId = asset.Id, 
-                EmployeeName = EmployeeName.Trim() 
-            });
-
-            try
-            {
-                await _db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                ModelState.AddModelError("", "Sorry, this asset was just checked out by someone else.");
-                return Page();
-            }
-
-            return RedirectToPage("Index");
+        try
+        {
+            await _db.SaveChangesAsync();
         }
+        catch (DbUpdateConcurrencyException)
+        {
+            ModelState.AddModelError("", "Sorry, this item was just checked out by someone else.");
+            return Page();
+        }
+
+        return RedirectToPage("Index");
     }
 }
