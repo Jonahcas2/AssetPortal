@@ -17,8 +17,12 @@ builder.Services.AddRazorPages(options =>
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
 
+// Add code here
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 builder.Services.AddDbContext<AssetContext>(options =>
-    options.UseSqlite("Data Source=assets.db"));
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
@@ -49,17 +53,21 @@ app.MapRazorPages()
    .WithStaticAssets();
 
 // Sample data
-using (var scope = app.Services.CreateScope())
+if (app.Environment.IsDevelopment())
 {
-    var db = scope.ServiceProvider.GetRequiredService<AssetContext>();
-    if (!db.Assets.Any())
+    using (var scope = app.Services.CreateScope())
     {
-        db.Assets.AddRange(
-            new AssetPortal.Models.Asset { Name = "Dell Latitude 5440", AssetTag = "LAP-0001", Category = "Laptop" },
-            new AssetPortal.Models.Asset { Name = "Dell 27\" Monitor", AssetTag = "MON-0001", Category = "Monitor" });
-        db.SaveChanges();
-    }
+        var db = scope.ServiceProvider.GetRequiredService<AssetContext>();
+        if (!db.Assets.Any())
+        {
+            db.Assets.AddRange(
+                new AssetPortal.Models.Asset { Name = "Dell Latitude 5440", AssetTag = "LAP-0001", Category = "Laptop" },
+                new AssetPortal.Models.Asset { Name = "Dell 27\" Monitor", AssetTag = "MON-0001", Category = "Monitor" });
+            db.SaveChanges();
+        }
+    } 
 }
+
 
 using (var scope = app.Services.CreateScope())
 {
